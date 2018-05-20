@@ -6,10 +6,10 @@
 
 <html>
 	<c:set var="requestType" value="Add User"/>
-	<c:set var="action" value="/addUserSubmit"/>
+	<c:set var="action" value="/user/addUserSubmit"/>
 	<c:if test="${user.id != 0}">
 		<c:set var="requestType" value="Update User"/>
-		<c:set var="action" value="/updateUserSubmit"/>
+		<c:set var="action" value="/user/updateUserSubmit"/>
 	</c:if>
 	<head>
 		<title>${requestType}</title>
@@ -20,7 +20,7 @@
 
 	<body>
 		<c:set var="currentPage" value="${requestScope['javax.servlet.forward.request_uri']}" scope="request"/>
-		<c:import url="NavigationBar.jsp"/>
+		<c:import url="../util/NavigationBar.jsp"/>
 		<div class="mainWrapper" align="center">
 		<h3>${requestType}</h3>
 		<hr/>

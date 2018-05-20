@@ -15,7 +15,7 @@
 
 	<body>
 		<c:set var="currentPage" value="${requestScope['javax.servlet.forward.request_uri']}" scope="request"/>
-		<c:import url="NavigationBar.jsp"/>
+		<c:import url="../util/NavigationBar.jsp"/>
 
 		<div class="mainWrapper" align="center">
 			<h3>Manage Users</h3>
