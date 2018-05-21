@@ -10,11 +10,10 @@ import com.exist.ecc.core.service.UserService;
 
 @Component
 public class UserValidator implements Validator {
+	private UserService userService;
 	public static final int MIN_PASSWORD_LENGTH = 6;
 
 	@Autowired
-	private UserService userService;
-
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
@@ -30,6 +29,7 @@ public class UserValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "password.required", "Required Field");
 
 		UsersDto user = (UsersDto) target;
+		
 		if ( userService.userNameAlreadyExists(user.getUserName()) ) {
 			errors.rejectValue("userName", "userName.alreadyExists", "Username already taken!");
 		}

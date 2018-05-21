@@ -63,4 +63,22 @@ $(document).ready(function() {
 
 	});
 
+	$(".userTab").click(function() {
+		var proceed = confirm("Update Password?");
+		if (proceed) {
+			var newPassword = window.prompt("Enter new Password:");
+
+			if (newPassword.length < 6) {
+				alert("Password too short!");
+				return;
+			}
+			
+			if (newPassword != null && newPassword != "") {
+				$.post("/user/updatePassword", {newPassword : newPassword}, function() {
+					alert("Password Updated!");
+				});
+			}
+		}
+	});
+
 });

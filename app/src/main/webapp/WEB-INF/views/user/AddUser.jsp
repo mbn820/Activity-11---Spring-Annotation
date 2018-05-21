@@ -7,9 +7,11 @@
 <html>
 	<c:set var="requestType" value="Add User"/>
 	<c:set var="action" value="/user/addUserSubmit"/>
+	<c:set var="headerTitle" value="Create new User Account"/>
 	<c:if test="${user.id != 0}">
 		<c:set var="requestType" value="Update User"/>
 		<c:set var="action" value="/user/updateUserSubmit"/>
+		<c:set var="headerTitle" value="Update User Account"/>
 	</c:if>
 	<head>
 		<title>${requestType}</title>
@@ -29,7 +31,7 @@
 			<table>
 				<form:hidden path="id"/>
 				<th colspan="2">
-					Create new User Account
+					${headerTitle}
 				</th>
 				<tr>
 					<td>Username</td>
@@ -37,9 +39,16 @@
 						<form:errors path="userName" cssClass="error"/></td>
 				</tr>
 				<tr>
-					<td>Password</td>
-					<td><form:input type="password" path="password" placeholder="Minimum length(6)"/> <br>
-						<form:errors path="password" cssClass="error"/></td>
+					<c:choose>
+						<c:when test="${requestType == 'Add User'}">
+							<td>Password</td>
+							<td><form:input type="password" path="password" placeholder="Minimum length(6)"/> <br>
+							<form:errors path="password" cssClass="error"/></td>
+						</c:when>
+						<c:otherwise>
+							<form:hidden path="password"/>
+						</c:otherwise>
+					</c:choose>
 				</tr>
 				<tr>
 					<td>User Role</td>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletResponse;
@@ -116,7 +117,6 @@ public class UserController {
 	public String loadUpdateUserPage(@PathVariable int id, ModelMap modelMap) {
 		LOGGER.debug("Loading update user form...");
 		UsersDto userToBeUpdated = userService.getUser(id);
-		userToBeUpdated.setPassword("");
 		modelMap.addAttribute("user", userToBeUpdated);
 		return "user/AddUser";
 	}
@@ -125,14 +125,28 @@ public class UserController {
 	public String processUpdateUserFormSubmit(@ModelAttribute("user") UsersDto user,
 											  BindingResult result) {
 		LOGGER.debug("Updating user...");
-		userValidator.validate(user, result);
-		if ( result.hasErrors() ) {
-			return "user/AddUser";
+
+		UsersDto origUser = userService.getUser( user.getId() );
+
+		if ( !origUser.getUserName().equals(user.getUserName()) ) {
+			userValidator.validate(user, result);
+			if ( result.hasErrors() ) {
+				return "user/AddUser";
+			}
 		}
-		String hashedPassword = new BCryptPasswordEncoder().encode( user.getPassword() );
-		user.setPassword(hashedPassword);
+		
 		userService.updateUser(user);
 		return "redirect:/user/manageUsers";
+	}
+
+	@RequestMapping(value = "/user/updatePassword", method = RequestMethod.POST)
+	public void processUpdatePasswordSubmit(@RequestParam("newPassword") String newPassword,
+										    Principal principal, HttpServletResponse response) {
+
+		String hashedPassword = new BCryptPasswordEncoder().encode(newPassword);
+		UsersDto user = userService.getUserByName( principal.getName() );
+		user.setPassword(hashedPassword);
+		userService.updateUser(user);
 	}
 
 
